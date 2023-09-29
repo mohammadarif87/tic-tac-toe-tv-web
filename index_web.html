@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tic-Tac-Toe Web</title>
+    <style>
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 5px;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            font-size: 24px;
+            text-align: center;
+            vertical-align: middle;
+            background-color: grey;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center; /* Center text vertically */
+        }
+
+        .cell:hover {
+            background-color: pink;
+        }
+
+        #reset-button {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tic-Tac-Toe Web</h1>
+    <div class="board" id="board"></div>
+    <p id="message"></p>
+    <p id="credits"></p>
+    <button id="reset-button" onclick="resetGame()">Reset</button>
+
+    <script>
+        const board = document.getElementById("board");
+        const message = document.getElementById("message");
+        const credits = document.getElementById("credits");
+        const resetButton = document.getElementById("reset-button");
+        const cells = [];
+
+        credits.textContent = "Created by Arif 2023"
+
+        let currentPlayer = "X";
+        let gameBoard = ["", "", "", "", "", "", "", "", ""];
+        let gameIsOver = false;
+
+        board.addEventListener("click", (event) => {
+    const cell = event.target;
+    const index = parseInt(cell.dataset.index);
+
+    if (gameBoard[index] === "" && !checkWinner()) {
+        gameBoard[index] = currentPlayer;
+        cell.textContent = currentPlayer;
+        cell.style.backgroundColor = "#fff";
+        currentPlayer = currentPlayer === "X" ? "O" : "X";
+        message.textContent = `Current player: ${currentPlayer}`;
+
+        const winner = checkWinner();
+        if (winner) {
+            if (winner === "draw") {
+                message.textContent = "It's a draw!";
+            } else {
+                message.textContent = `Player ${winner} wins!`;
+            }
+            gameIsOver = true;
+            resetButton.style.display = "block";
+        }
+    }
+});
+
+        function checkWinner() {
+    const winningCombinations = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+    ];
+
+    for (const combination of winningCombinations) {
+        const [a, b, c] = combination;
+        if (gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
+            return gameBoard[a]; // Return the winning player's symbol
+        }
+    }
+
+    if (!gameBoard.includes("")) {
+        return "draw"; // Return "draw" when there's no winner
+    }
+
+    return null; // Return null if the game is still ongoing
+}
+
+
+        function initializeGame() {
+            for (let i = 0; i < 9; i++) {
+                const cell = document.createElement("div");
+                cell.className = "cell";
+                cell.dataset.index = i;
+                board.appendChild(cell);
+            }
+
+            message.textContent = `Current player: ${currentPlayer}`;
+        }
+
+        function resetGame() {
+            //refresh the page
+            location.reload();
+        }
+
+        initializeGame();
+    </script>
+</body>
+</html>
