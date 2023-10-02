@@ -3,12 +3,14 @@
 <head>
     <title>Tic-Tac-Toe TV</title>
     <style>
+        /* Set up the grid board (3 by 3 with a 5 pixel gap) */
         .board {
             display: grid;
             grid-template-columns: repeat(3, 100px);
             grid-gap: 5px;
         }
 
+        /* Set up the values for individual cells including a grey colour */
         .cell {
             width: 100px;
             height: 100px;
@@ -22,35 +24,45 @@
             align-items: center; /* Center text vertically */
         }
 
+        /* Pink outline whenever cell is in focus */
         .cell:focus {
             outline: 3px solid pink; /* Set the focus outline color to pink */
         }
 
+        /* Initial reset button set to NOT display */
         #reset-button {
             display: none;
         }
     </style>
 </head>
+
+<!-- Background is set to white -->
 <body style="background-color:white;">
     <h1>Tic-Tac-Toe TV</h1>
+    <!-- Set id's for the different elements (these can then be referenced later) -->
     <div class="board" id="board"></div>
     <p id="message"></p>
     <p id="credits"></p>
+    <!-- Set the reset button to run the resetGame() function on click -->
     <button id="reset-button" onclick="resetGame()">Reset</button>
 
     <script>
+        // Declare variables referencing elements - cells is used for focus
         const board = document.getElementById("board");
         const message = document.getElementById("message");
         const resetButton = document.getElementById("reset-button");
         const cells = [];
 
+        // textContent used to populate field Credits
         credits.textContent = "Created by Arif 2023"
 
+        //Declare variables for the game
         let currentPlayer = "X";
         let gameBoard = ["", "", "", "", "", "", "", "", ""];
         let focusedCellIndex = 0;
         let gameIsOver = false;
 
+        // if statement to shift focus to Reset is gameIsOver is true
         board.addEventListener("keydown", (event) => {
             if (gameIsOver) {
                 // Focus on the Reset button when the game is over
@@ -63,6 +75,7 @@
                 return; // Don't allow moves when the game is over
             }
 
+            // Grid navigation based on keypress and boundings based on focusedCellIndex
             if (event.key === "ArrowRight" && focusedCellIndex < 8) {
                 focusedCellIndex++;
             } else if (event.key === "ArrowLeft" && focusedCellIndex > 0) {
@@ -78,6 +91,7 @@
                 currentPlayer = currentPlayer === "X" ? "O" : "X";
                 message.textContent = `Current player: ${currentPlayer}`;
 
+                // if statement to print a message and set gameIsOver to true when checkWinner combination is matched
                 const winner = checkWinner();
                 if (winner) {
                     if (winner === "draw") {
@@ -86,7 +100,7 @@
                         message.textContent = `Player ${winner} wins! Press enter to reset`;
                     }
                     gameIsOver = true;
-                    resetButton.style.display = "block";
+                    resetButton.style.display = "block"; // display the resetButton
                     resetButton.focus(); // Focus on Reset button
                 }
             }
@@ -94,6 +108,7 @@
             cells[focusedCellIndex].focus();
         });
 
+        // Check winner function and combination
         function checkWinner() {
             const winningCombinations = [
                 [0, 1, 2],
@@ -120,7 +135,8 @@
             return null; // Return null if the game is still ongoing
         }
 
-        function initializeGame() {
+        // The function first run to start the game and set the empty grid
+        function initialiseGame() {
             for (let i = 0; i < 9; i++) {
                 const cell = document.createElement("div");
                 cell.className = "cell";
@@ -133,6 +149,7 @@
             cells[focusedCellIndex].focus(); // Set initial focus on the first cell
         }
 
+        // The function triggered when Reset is clicked. The board is reset back to grey and empty text on the grid
         function resetGame() {
             for (let i = 0; i < 9; i++) {
                 gameBoard[i] = "";
@@ -143,12 +160,13 @@
             currentPlayer = "X";
             message.textContent = `Current player: ${currentPlayer}`;
             focusedCellIndex = 0;
-            gameIsOver = false;
-            resetButton.style.display = "none";
+            gameIsOver = false; // gameIsOver is set to false on reset
+            resetButton.style.display = "none"; // reset button is hidden after selecting Reset
             cells[focusedCellIndex].focus(); // Set focus back to the first cell
         }
 
-        initializeGame();
+        // Run the initializeGame function
+        initialiseGame();
     </script>
 </body>
 </html>
